@@ -30,7 +30,8 @@ def num_of_dates_till_end_of_season(game_day):
 # print(num_of_dates_till_end_of_season(df['date_est'][12000]))
 
 ########################################################################
-def num_mvp_on_teams(team1, team2, game_date, game_df, jersey_df, player_df):
+# returns player_id, name, jersey_sale_rank
+def jersey_sales_on_teams(team1, team2, game_date, game_df, jersey_df, player_df):
     game_id_df = game_df.loc[(game_df['date_est'] == game_date) & (game_df['Team'] == team1)]
     game_id = game_id_df['Game_id'][game_id_df.index.get_values()[0]]
     team1_players_df = player_df.loc[(player_df['Game_id'] == game_id) & (player_df['Team'] == team1)]
@@ -50,23 +51,29 @@ def num_mvp_on_teams(team1, team2, game_date, game_df, jersey_df, player_df):
     # print('t', target_year, 'col1', column1, "col2", column2)
 
     t1_jersey_player = 0
+    t1_list =[]
     for index_t1, row_t1 in team1_players_df.iterrows():
         name1 = row_t1['Person_id']
+        actual_name1 = row_t1['Name']
         for index_j, row_j in jersey_df.iterrows():
             # print(row_j[column1], name1, row_j[column2])
             if row_j[column1] == name1 or row_j[column2] == name1:
                 t1_jersey_player += 1
+                t1_list.append((name1,actual_name1,int(index_j)+1))
     # print(t1_jersey_player)
 
     t2_jersey_player = 0
+    t2_list = []
     for index_t2, row_t2 in team2_players_df.iterrows():
         name2 = row_t2['Person_id']
+        actual_name2 = row_t2['Name']
         for index_j, row_j in jersey_df.iterrows():
             # print(row_j[column1], name2, row_j[column2])
             if row_j[column1] == name1 or row_j[column2] == name2:
                 t2_jersey_player += 1
+                t2_list.append((name2, actual_name2, int(index_j) + 1))
     # print(t2_jersey_player)
-    return (t1_jersey_player, t2_jersey_player)
+    return (t1_list, t2_list)
 
 
 # test case
@@ -74,5 +81,5 @@ player_df = pd.read_csv('Player_Data.csv')
 jersey_df = pd.read_csv('Jersey_Sales_Rankings_Data.csv')
 game_df = pd.read_csv('Game_Data.csv')
 # num_mvp_on_teams('BOS', 'MIA', '10/26/2010', game_df, jersey_df, player_df)
-t1_jersery_count, t2_jersey_count = num_mvp_on_teams('SAS', 'CHA', '3/21/2016', game_df, jersey_df, player_df)
+t1_jersery_count, t2_jersey_count = jersey_sales_on_teams('SAS', 'CHA', '3/21/2016', game_df, jersey_df, player_df)
 print(t1_jersery_count,t2_jersey_count)
