@@ -25,11 +25,19 @@ def num_of_dates_till_end_of_season(game_day):
     return difference.days
 
 
-df = pd.read_csv('Game_Data.csv')
-# df['date_est'][12000]
-print(num_of_dates_till_end_of_season('04/10/2015'))
+# df = pd.read_csv('Game_Data.csv')
+# # df['date_est'][12000]
+# print(num_of_dates_till_end_of_season('04/10/2015'))
+##########################################
+def num_mvp_on_teams(team1, team2, game_day, player_df, jersey_df):
+    date_format = "%m/%d/%Y"
+    game_date = datetime.datetime.strptime(game_day, date_format)
+    if game_date.month <= 4:
+        game_year = game_date.year -1
+    else:
+        game_year = game_date.year - 1
+    t1_df = player_df[['Season_id'] == game_date.year and ['']]
 
-# print(list(df))
-#
-# for index, row in df.iterrows():
-#     print(index,row['Game_id'])
+
+    team1_players = []
+    team2_players = []
